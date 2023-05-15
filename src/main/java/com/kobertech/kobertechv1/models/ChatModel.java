@@ -12,6 +12,6 @@ public class ChatModel {
     private String senderName;
     private String receiverName;
     private String message;
-    private String date;
+    private Date date;
     private Status status;
 }
