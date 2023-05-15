@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 
 import java.time.Instant;
@@ -35,4 +36,12 @@ public class UserEntity {
 
     @Column(name = "date")
     private Instant date;
+
+    @Lob
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+    
+    @Column(name = "submission_timestamp")
+    private Instant submissionTimestamp;
+
 }
