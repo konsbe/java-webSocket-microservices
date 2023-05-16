@@ -1,6 +1,7 @@
 package com.kobertech.kobertechv1.services.utils;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,10 @@ public class UserServiceImplementation implements UserService {
     }
 
     @Override
-    public Optional<UserEntity> getUser() {
-        // TODO Auto-generated method stub
+    public Optional<UserEntity> getUser(Map<String, Object> searchCriteria) {
+
+        String email = (String) searchCriteria.get("email");
+        
         return Optional.empty();
     }
 
@@ -35,16 +38,19 @@ public class UserServiceImplementation implements UserService {
 
         return user;
     }
-
+    
     @Override
     public UserEntity updateUser(UserEntity user) {
-        // TODO Auto-generated method stub
-        return null;
+
+        this.userRepository.save(user);
+    
+        return user;
     }
 
     @Override
     public void deleteUser(Long userId) {
-        // TODO Auto-generated method stub      
+
+        this.userRepository.deleteById(userId);
     }
 
     
