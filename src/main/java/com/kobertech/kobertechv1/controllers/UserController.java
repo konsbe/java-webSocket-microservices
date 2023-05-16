@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value="/account")
-public class SignUpController  {
+public class UserController  {
 
     @PostMapping("/signup")
     public void signUp(@RequestBody UserEntity account) {
