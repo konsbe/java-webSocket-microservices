@@ -1,5 +1,6 @@
 package com.kobertech.kobertechv1.services.utils;
 
+import java.time.Instant;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,11 @@ import com.kobertech.kobertechv1.services.UserService;
 @Service
 public class UserServiceImplementation implements UserService {
 
-    // @Autowired
-    // private final UserRepository userRepository;
+    @Autowired
+    private final UserRepository userRepository;
 
-    @Override
-    public void deleteUser(Long userId) {
-        // TODO Auto-generated method stub      
+    public UserServiceImplementation(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -28,8 +28,12 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserEntity signUpUser(UserEntity user) {
-        // TODO Auto-generated method stub
-        return null;
+        
+        user.setSubmissionTimestamp(Instant.now());
+
+        this.userRepository.save(user);
+
+        return user;
     }
 
     @Override
@@ -37,5 +41,11 @@ public class UserServiceImplementation implements UserService {
         // TODO Auto-generated method stub
         return null;
     }
+
+    @Override
+    public void deleteUser(Long userId) {
+        // TODO Auto-generated method stub      
+    }
+
     
 }
