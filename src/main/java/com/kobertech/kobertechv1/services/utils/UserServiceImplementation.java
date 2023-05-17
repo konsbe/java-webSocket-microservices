@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kobertech.kobertechv1.entities.UserEntity;
+import com.kobertech.kobertechv1.exceptions.UserExceptions;
 import com.kobertech.kobertechv1.repository.UserRepository;
 import com.kobertech.kobertechv1.services.UserService;
 
@@ -21,29 +22,28 @@ public class UserServiceImplementation implements UserService {
         this.userRepository = userRepository;
     }
 
-    @Override
-    public Optional<UserEntity> getUser(Map<String, Object> searchCriteria) {
 
-        String email = (String) searchCriteria.get("email");
-        
-        return Optional.empty();
+    @Override
+    public UserEntity getUser(String email, String password) {
+        return userRepository.findByEmailAndPassword(email, password)
+                .orElseThrow(() -> new UserExceptions(String.format("user with email: %s, does not exist", email)));
     }
 
     @Override
     public UserEntity signUpUser(UserEntity user) {
-        
+
         user.setSubmissionTimestamp(Instant.now());
 
         this.userRepository.save(user);
 
         return user;
     }
-    
+
     @Override
     public UserEntity updateUser(UserEntity user) {
 
         this.userRepository.save(user);
-    
+
         return user;
     }
 
@@ -53,5 +53,4 @@ public class UserServiceImplementation implements UserService {
         this.userRepository.deleteById(userId);
     }
 
-    
 }
