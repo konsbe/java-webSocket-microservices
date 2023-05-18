@@ -1,6 +1,7 @@
 package com.kobertech.kobertechv1.controllers;
 
 import com.kobertech.kobertechv1.entities.UserEntity;
+import com.kobertech.kobertechv1.exceptions.UserExceptions;
 import com.kobertech.kobertechv1.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,12 +37,12 @@ public class UserController  {
     }
 
     @GetMapping("/login")
-    public void logIn(@RequestBody String email) {
-        // Check if user exists
-        // Perform sign-up 
-        // Access account.getUserName(), account.getEmail(), account.getPassword(), etc.
-        // Save the account to the database or perform any other necessary operations
-        // You can also return a response or redirect to a success page
-    }
-    
+    public ResponseEntity<UserEntity> logIn(@RequestBody UserEntity userEntity) {
+        try {
+            UserEntity user = userService.getUser(userEntity.getEmail(), userEntity.getPassword());
+            return ResponseEntity.ok(user);
+        } catch (UserExceptions exception) {
+            return ResponseEntity.status(exception.getStatusCode()).build();
+        }
+    }    
 }

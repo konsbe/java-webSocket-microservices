@@ -8,7 +8,7 @@ import lombok.Setter;
 public class UserExceptions extends RuntimeException {
     
     private String message;
-    private String code;
+    private int statusCode; // Add a property for the status code
 
     public UserExceptions() {
         super();

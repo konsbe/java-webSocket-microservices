@@ -1,10 +1,9 @@
 package com.kobertech.kobertechv1.services.utils;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.kobertech.kobertechv1.entities.UserEntity;
@@ -22,11 +21,15 @@ public class UserServiceImplementation implements UserService {
         this.userRepository = userRepository;
     }
 
-
     @Override
     public UserEntity getUser(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> new UserExceptions(String.format("user with email: %s, does not exist", email)));
+                .orElseThrow(() -> {
+                    UserExceptions exception = new UserExceptions(
+                            String.format("User with email %s does not exist", email));
+                    exception.setStatusCode(HttpStatus.NOT_ACCEPTABLE.value());
+                    return exception;
+                });
     }
 
     @Override
