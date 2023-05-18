@@ -2,7 +2,10 @@ package com.kobertech.kobertechv1.controllers;
 
 import com.kobertech.kobertechv1.entities.UserEntity;
 import com.kobertech.kobertechv1.exceptions.UserExceptions;
+import com.kobertech.kobertechv1.response.ErrorResponse;
 import com.kobertech.kobertechv1.services.UserService;
+
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,12 +40,19 @@ public class UserController  {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<UserEntity> logIn(@RequestBody UserEntity userEntity) {
-        try {
-            UserEntity user = userService.getUser(userEntity.getEmail(), userEntity.getPassword());
-            return ResponseEntity.ok(user);
-        } catch (UserExceptions exception) {
-            return ResponseEntity.status(exception.getStatusCode()).build();
-        }
-    }    
+    public ResponseEntity<Object> logIn(@RequestBody UserEntity userEntity) {
+    try {
+        UserEntity user = userService.getUser(userEntity.getEmail(), userEntity.getPassword());
+        return ResponseEntity.ok(user);
+    } catch (UserExceptions exception) {
+        ErrorResponse errorResponse = new ErrorResponse();
+        errorResponse.setTimestamp(LocalDateTime.now());
+        errorResponse.setStatus(exception.getStatusCode());
+        errorResponse.setError(HttpStatus.valueOf(exception.getStatusCode()).getReasonPhrase());
+        errorResponse.setMessage(String.format("user with the email %s does not exist", userEntity.getEmail()));
+        errorResponse.setPath("/account/login");
+        
+        return ResponseEntity.status(exception.getStatusCode()).body(errorResponse);
+    }
+}    
 }
