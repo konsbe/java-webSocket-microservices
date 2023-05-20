@@ -11,15 +11,14 @@ import com.kobertech.kobertechv1.exceptions.UserExceptions;
 import com.kobertech.kobertechv1.repository.UserRepository;
 import com.kobertech.kobertechv1.services.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class UserServiceImplementation implements UserService {
 
     @Autowired
     private final UserRepository userRepository;
-
-    public UserServiceImplementation(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public UserEntity getUser(String email, String password) {

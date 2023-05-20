@@ -5,6 +5,8 @@ import com.kobertech.kobertechv1.exceptions.UserExceptions;
 import com.kobertech.kobertechv1.response.ErrorResponse;
 import com.kobertech.kobertechv1.services.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value="/account")
+@RequiredArgsConstructor
 public class UserController  {
 
     @Autowired
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-    
-
-    
     @PostMapping("/signup")
     public ResponseEntity<UserEntity> signUp(@RequestBody UserEntity userEntity) throws Exception {
         // Check if user exists
@@ -49,7 +46,7 @@ public class UserController  {
         errorResponse.setTimestamp(LocalDateTime.now());
         errorResponse.setStatus(exception.getStatusCode());
         errorResponse.setError(HttpStatus.valueOf(exception.getStatusCode()).getReasonPhrase());
-        errorResponse.setMessage(String.format("user with the email %s does not exist", userEntity.getEmail()));
+        errorResponse.setMessage(String.format("user with the email %s or password are not correct", userEntity.getEmail()));
         errorResponse.setPath("/account/login");
         
         return ResponseEntity.status(exception.getStatusCode()).body(errorResponse);
