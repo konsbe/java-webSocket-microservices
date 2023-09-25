@@ -19,20 +19,15 @@ import java.time.Instant;
 @Getter
 @Setter
 @ToString
-// persist the UserEntity data in a database using an ORM 
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @Column(name = "username")
     private String userName;
 
     @Column(name = "email")
     private String email;
-
-    @Column(name = "password")
-    private String password;
 
     @Column(name = "date")
     private Instant date;

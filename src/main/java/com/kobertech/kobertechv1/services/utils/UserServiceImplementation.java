@@ -22,13 +22,14 @@ public class UserServiceImplementation implements UserService {
 
     @Override
     public UserEntity getUser(String email, String password) {
-        return userRepository.findByEmailAndPassword(email, password)
-                .orElseThrow(() -> {
-                    UserExceptions exception = new UserExceptions(
-                            String.format("User with email %s does not exist", email));
-                    exception.setStatusCode(HttpStatus.NOT_ACCEPTABLE.value());
-                    return exception;
-                });
+        return null;
+        // return userRepository.findByEmailAndPassword(email, password)
+        //         .orElseThrow(() -> {
+        //             UserExceptions exception = new UserExceptions(
+        //                     String.format("User with email %s does not exist", email));
+        //             exception.setStatusCode(HttpStatus.NOT_ACCEPTABLE.value());
+        //             return exception;
+        //         });
     }
 
     @Override

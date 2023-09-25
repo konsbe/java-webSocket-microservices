@@ -9,7 +9,6 @@ import com.kobertech.kobertechv1.entities.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    Optional<UserEntity> findByEmailAndPassword(String email, String password);
     // Custom query methods can be defined here
     // Spring Data JPA provides various query generation strategies and keyword-based methods
     // For example, findByEmail(String email) will generate a query to find an account by email

@@ -8,6 +8,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@Builder
 public class ChatModel {
     private String senderName;
     private String receiverName;

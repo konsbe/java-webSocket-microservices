@@ -11,6 +11,5 @@ import java.time.Instant;
 public class AccountModel {
     private String userName;
     private String email;
-    private String password;
     private Instant date;
 }
