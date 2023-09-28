@@ -13,6 +13,6 @@ public class ChatModel {
     private String senderName;
     private String receiverName;
     private String message;
-    private Date date;
+    private String date;
     private Status status;
 }

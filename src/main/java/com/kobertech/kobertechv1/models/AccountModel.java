@@ -1,7 +1,6 @@
 package com.kobertech.kobertechv1.models;
 
 import lombok.*;
-import java.time.Instant;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -9,7 +8,9 @@ import java.time.Instant;
 @Setter
 @ToString
 public class AccountModel {
-    private String userName;
-    private String email;
-    private Instant date;
+    private String senderName;
+    private String receiverName;
+    private String message;
+    private String date;
+    private Status status;
 }
