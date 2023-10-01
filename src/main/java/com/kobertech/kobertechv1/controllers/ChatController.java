@@ -1,6 +1,7 @@
 package com.kobertech.kobertechv1.controllers;
 
 import com.kobertech.kobertechv1.models.ChatModel;
+import com.kobertech.kobertechv1.models.RoomModel;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,56 +28,53 @@ public class ChatController {
     @MessageMapping("/chat.message")
     @SendTo("/chatroom/public")
     public ChatModel receiveMessage(@Payload ChatModel message) {
-        System.out.println("Subscribe username: " + message.getSenderName());
+        System.out.println("chat.message: " + message.getSenderName());
+        System.out.println(message.toString());
+        return message;
+    }
+
+    @MessageMapping("/private.message")
+    public ChatModel recMessage(@Payload ChatModel message){
+        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(),"/private",message);
         System.out.println(message.toString());
         return message;
     }
 
     @MessageMapping("/chat.addUser")
     @SendTo("/chatroom/public")
-    public ChatModel addUser(@Payload ChatModel message, SimpMessageHeaderAccessor headerAccessor) {
+    public RoomModel addUser(@Payload ChatModel message, SimpMessageHeaderAccessor headerAccessor) {
         // Add username in web socket session
+        RoomModel room = new RoomModel();
         System.out.println("chat.addUser: " + message.toString());
         String username = message.getSenderName();
         headerAccessor.getSessionAttributes().put("username", username);
-
         // Get the topic name (e.g., "/chatroom/public")
         String topic = headerAccessor.getDestination();
 
         // Add the user to the set of subscribed users for the topic
-        subscribedUsersByTopic.computeIfAbsent(topic, k -> new HashSet<>()).add(username);
-        System.out.println("subscribedUsersByTopic: " + topic);
+        // or  Remove the user by username from all topics
+        if ("JOIN".equals(message.getStatus().toString())) {
+            subscribedUsersByTopic.computeIfAbsent(topic, k -> new HashSet<>()).add(username);
+        } else if ("LEAVE".equals(message.getStatus().toString())) {
+            for (Set<String> users : subscribedUsersByTopic.values()) {
+                users.remove(username);
+            }
+        }
         // Broadcast the updated list of connected users to all clients
-        broadcastConnectedUsers(topic);
+        String msg = broadcastConnectedUsers(topic).toString();
+        message.setMessage(msg);
+        room.setConnctedUsers(broadcastConnectedUsers(topic));
 
-        return message;
+        return room;
 
-    }
-
-    @MessageMapping("/chat/disconnect")
-    public void disconnect(SimpMessageHeaderAccessor headerAccessor) {
-        String username = (String) headerAccessor.getSessionAttributes().get("username");
-        String topic = headerAccessor.getDestination();
-
-        // Remove the user from the set of subscribed users for the topic
-        subscribedUsersByTopic.computeIfAbsent(topic, k -> new HashSet<>()).remove(username);
-
-        // Broadcast the updated list of connected users to all clients
-        broadcastConnectedUsers(topic);
     }
 
     // Helper method to broadcast the list of connected users for a specific topic
-    private void broadcastConnectedUsers(String topic) {
+    private Set<String> broadcastConnectedUsers(String topic) {
         Set<String> connectedUsers = subscribedUsersByTopic.getOrDefault(topic, Collections.emptySet());
         simpMessagingTemplate.convertAndSend(topic + "/users", connectedUsers);
         System.out.println("Broadcasting connected users for " + topic + ": " + connectedUsers);
-    }
-
-    @MessageMapping("/chat/private-message")
-    public ChatModel receivePrivateMessage(@Payload ChatModel message) {
-        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(), "/private", message);
-        System.out.println(message.toString());
-        return message;
+        return connectedUsers;
     }
 
 }
