@@ -2,6 +2,7 @@ package com.kobertech.kobertechv1.controllers;
 
 import com.kobertech.kobertechv1.models.ChatModel;
 import com.kobertech.kobertechv1.models.RoomModel;
+import com.kobertech.kobertechv1.models.Status;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -64,7 +65,7 @@ public class ChatController {
         String msg = broadcastConnectedUsers(topic).toString();
         message.setMessage(msg);
         room.setConnctedUsers(broadcastConnectedUsers(topic));
-
+        room.setStatus(message.getStatus());
         return room;
 
     }

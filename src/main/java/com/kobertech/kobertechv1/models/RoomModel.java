@@ -12,4 +12,5 @@ import lombok.*;
 public class RoomModel {
     private Set<String> users;
     private Set<String> connctedUsers;
+    private Status status;
 }
