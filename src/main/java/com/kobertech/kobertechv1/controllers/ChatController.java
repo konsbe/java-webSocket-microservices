@@ -2,7 +2,6 @@ package com.kobertech.kobertechv1.controllers;
 
 import com.kobertech.kobertechv1.models.ChatModel;
 import com.kobertech.kobertechv1.models.RoomModel;
-import com.kobertech.kobertechv1.models.Status;
 
 import java.util.Collections;
 import java.util.HashMap;
